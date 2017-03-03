@@ -421,8 +421,6 @@ public:
     
 BigNumber* merge(BigNumber *a, int size, int counter)
 {
-    cout << size << endl;
-    print(a,size);
     //Base case
     if (size == 1) 
     {
@@ -432,7 +430,7 @@ BigNumber* merge(BigNumber *a, int size, int counter)
     //Divide
     int i, j, k;
     int n1 = floor(size / 2);
-    int n2 = ceil(size / 2);
+    int n2 = ceil(size / 2) + size % 2;
     //Create temp arrays
     BigNumber *L = new BigNumber[n1];
     BigNumber *R = new BigNumber[n2];
@@ -488,9 +486,6 @@ BigNumber* merge(BigNumber *a, int size, int counter)
     //Merge L[] and R[]
     delete[] L; //Always delete a dynamically allocated array
     delete[] R;
-
-    print(a,size);
-cout << endl;    
     return a;
 }
 
