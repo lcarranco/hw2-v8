@@ -263,14 +263,14 @@ private:
 };
 
 
-      void print(BigNumber *a, int size)
-      {
-          for (int i = 0; i < size; i++)
-          {
-              a[i].print();
-          }
-          cout << endl;
-      }
+    void print(BigNumber *a, int size)
+    {
+        for (int i = 0; i < size; i++)
+        {
+            a[i].print();
+            cout << endl;
+        }
+    }
 
 
 class Sort
