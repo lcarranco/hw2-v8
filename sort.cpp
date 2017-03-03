@@ -309,35 +309,37 @@ public:
     }
     void quickSort(BigNumber *a,int left, int right)
     {
-      //cout<<"In quickSort"<<endl;
-          int i = left;
-          int j = right;
-          int g=right-1;
-          int countSwap=0;
-          int pivot =(right+g) / 2; //pivot is in the middle
-          /* partition */
-          while(left<j || i<right)
-    {
-        while(a[i]<a[pivot])
-        i++;
-        while(a[pivot]<a[j])
-        j--;
-
-        if(i<= j){
-            a[j].swap(a[i]);
-            countSwap++;
-            i++;
-            j--;
-        }
-        else{
-            if(left<j)
-                quickSort(a, left, j);
-            if(i<right)
-                quickSort(a,i,right);
-            return;
+        //cout<<"In quickSort"<<endl;
+        int i = left;
+        int j = right;
+        int g=right-1;
+        int countSwap=0;
+        int pivot =(right+g) / 2; //pivot is in the middle
+        /* partition */
+        while(left<j || i<right)
+        {
+            while(a[i]<a[pivot])
+                i++;
+            while(a[pivot]<a[j])
+                j--;
+            if(i<= j)
+            {
+                a[j].swap(a[i]);
+                countSwap++;
+                i++;
+                j--;
+            }
+            else
+            {
+                if(left<j)
+                    quickSort(a, left, j);
+                if(i<right)
+                    quickSort(a,i,right);
+                return;
+            }
         }
     }
-        }
+    
     void heapify(BigNumber *a, int size, int i, int comparisons, int countSwap)
     {
         int largest = i;  // Initialize largest as root
