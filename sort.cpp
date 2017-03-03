@@ -27,6 +27,11 @@ public:
     // Destructor
     ~DoubleLinkedList()
     {
+        clear();
+    }
+
+    void clear()
+    {
         while (head != nullptr)
         {
             Node* deleteme = head;
@@ -34,6 +39,7 @@ public:
             delete deleteme;
         }
     }
+
     // Copy constructor
     DoubleLinkedList(DoubleLinkedList const & list)
     {
@@ -42,11 +48,18 @@ public:
     // Build a Double Linked List
     DoubleLinkedList(const std::string& num, int digitsPerNode);
 
-    void operator=(DoubleLinkedList & other)
+    DoubleLinkedList & operator=(DoubleLinkedList const & other)
     {
+        clear();
+
         // cout << "equal" << endl;
-        head = other.head;
-        other.head = nullptr;
+        Node* temp = other.head;
+        while (temp != nullptr)
+        {
+            push_back(temp->str);
+            temp = temp->next;
+        }
+        return *this;
     }
 
     void push_front(string parted)
@@ -95,7 +108,6 @@ public:
             cout << temp->str;
             temp = temp->next;
         }
-        cout << endl;
     }
 
     Node at(int index) const
@@ -161,7 +173,7 @@ public:
     {
         // cout << "big copy" << endl;
     }
-    BigNumber & operator= (BigNumber other)
+    BigNumber & operator= (BigNumber const & other)
     {
         // cout << "operator=" << endl;
         isNegative = other.isNegative;
@@ -240,15 +252,26 @@ public:
         std::swap(isNegative, other.isNegative);
         data.swap(other.data);
     }
-     bool operator>= (BigNumber const & other) const
-    {
-        return !operator< (other);
-    }
+    // bool operator>= (BigNumber const & other) const
+    // {
+    //     return !operator< (other);
+    // }
 
 private:
     bool isNegative = false;
     DoubleLinkedList data;
 };
+
+
+      void print(BigNumber *a, int size)
+      {
+          for (int i = 0; i < size; i++)
+          {
+              a[i].print();
+          }
+          cout << endl;
+      }
+
 
 class Sort
 {
@@ -396,37 +419,53 @@ public:
     }
 
     
-void merge(BigNumber *a, int l, int m, int r)
+BigNumber* merge(BigNumber *a, int size, int counter)
 {
+    cout << size << endl;
+    print(a,size);
+    //Base case
+    if (size == 1) 
+    {
+        return a;
+    }
+
+    //Divide
     int i, j, k;
-    int n1 = m - l + 1;
-    int n2 = r - m;
+    int n1 = floor(size / 2);
+    int n2 = ceil(size / 2);
     //Create temp arrays
-    BigNumber L[n1];
-    BigNumber R[n2];
+    BigNumber *L = new BigNumber[n1];
+    BigNumber *R = new BigNumber[n2];
     //Copy data to temp arrays L[] and R[]
     for (i = 0; i < n1; i++)
     {
-        L[i]=(a[l + i]);
+        L[i] = a[i];
     }
     for (j = 0; j < n2; j++)
     {
-        R[j]=(a[m + 1 + j]);
+        R[j] = a[j + n1];
     }
+
+    //Recursion
+    L = merge(L, n1, counter); //Putting in an unsorted L[] and returning a sorted L[]
+    R = merge(R, n2, counter); //Putting in an unsorted R[] and returning a sorted R[]
+
+    //Conquer
     //Merge the temp arrays back into arr[l...r]
     i = 0; //Initial index of first subarray
     j = 0; //Initial index of second subarray
-    k = l; //Initial index of merged subarray
+    k = 0; //Initial index of merged subarray
+
     while (i < n1 && j < n2)
     {
-        if (R[j] >= L[i])
+        if (L[i] < R[j])
         {
-            a[k]=(L[i]);
+            a[k] = L[i];
             i++;       
         }
         else
         {
-            a[k]=(R[j]);
+            a[k] = R[j];
             j++;
         }
         k++;
@@ -434,28 +473,35 @@ void merge(BigNumber *a, int l, int m, int r)
     //Copy the remaining elements of L[], if there are any
     while (i < n1)
     {
-        a[k]=(L[i]);
+        a[k] = L[i];
         i++;
         k++;
     }
     //Copy the remaining elents of R[], if there are any
     while (j < n2)
     {
-        a[k]=(R[j]);
+        a[k] = R[j];
         j++;
         k++;
     }
+
+    //Merge L[] and R[]
+    delete[] L; //Always delete a dynamically allocated array
+    delete[] R;
+
+    print(a,size);
+cout << endl;    
+    return a;
 }
 
 //l is for left index and r is right index of the sub-array of arr to be sorted
-void mergeSort(BigNumber *a, int l, int r)
+void mergeSort(BigNumber *a, int size)
 {
-    if (l < r)
+    if (size > 1)
     {
-        int m = l + (r - 1) / 2;
-        mergeSort(a, l, m);
-        mergeSort(a, m + 1, r);
-        merge(a, l, m, r);
+        int counter = 0;
+        cout << "start merge" << endl;
+        merge(a, size, counter);
     }
 }
 
@@ -492,29 +538,19 @@ void mergeSort(BigNumber *a, int l, int r)
     //     selectionSort(i, iSmallest, j);
     // }
 
-    fstream bigO;
-    Sort & operator= (Sort & other)
-    {
-        // cout << "operator=" << endl;
-        a = other.a;
-        //data = other.data;
-        return *this;
-    }
+    // Sort & operator= (Sort & other)
+    // {
+    //     // cout << "operator=" << endl;
+    //     a = other.a;
+    //     //data = other.data;
+    //     return *this;
+    // }
 
   private:
-      //fstream bigO;
+      fstream bigO;
       BigNumber *a;
 
   };
-
-
-      void print(BigNumber *a, int size)
-      {
-          for (int i = 0; i < size; i++)
-          {
-              a[i].print();
-          }
-      }
 
       int count_lines(string & filename, int digitsPerNode)
       {
@@ -588,8 +624,8 @@ int main(int argc, char* argv[])
     }
     if (algorithm == "merge")
     {
-        sort.mergeSort(a,0,size-1);
-        print(a,size);
+        sort.mergeSort(a, size);
+        print(a, size);
     }
     if (algorithm == "heap")
     {
