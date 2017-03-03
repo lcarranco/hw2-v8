@@ -100,12 +100,12 @@ public:
         }
     }
 
-    void print() const
+    void print(fstream & out) const
     {
         Node* temp = head;
         while (temp != nullptr)
         {
-            cout << temp->str;
+            out << temp->str;
             temp = temp->next;
         }
     }
@@ -238,13 +238,13 @@ public:
         return result;
     }
 
-    void print() const
+    void print(fstream & out) const
     {
         if (isNegative)
         {
-            cout << "-";
+            out << "-";
         }
-        data.print();
+        data.print(out);
     }
 
     void swap(BigNumber & other)
@@ -263,12 +263,13 @@ private:
 };
 
 
-    void print(BigNumber *a, int size)
+    void print(BigNumber *a, int size, fstream & out)
     {
-        for (int i = 0; i < size; i++)
+        a[0].print(out);
+        for (int i = 1; i < size; i++)
         {
-            a[i].print();
-            cout << endl;
+            out << endl;
+            a[i].print(out);
         }
     }
 
@@ -495,7 +496,6 @@ void mergeSort(BigNumber *a, int size)
     if (size > 1)
     {
         int counter = 0;
-        cout << "start merge" << endl;
         merge(a, size, counter);
     }
 }
@@ -589,6 +589,8 @@ int main(int argc, char* argv[])
     std::string filename = am.get("input");
     std::string algorithm = am.get("algorithm");
     int digitsPerNode = std::stoi(am.get("digitsPerNode"));
+    std::string outfile = am.get("output");
+    cout << outfile << endl;
 
     int size = count_lines(filename, digitsPerNode);
     BigNumber *a = new BigNumber[size];
@@ -600,34 +602,42 @@ int main(int argc, char* argv[])
 
     if (algorithm == "select")
     {
-      sort.selectionSort(a,size);
-      print(a, size);
+        sort.selectionSort(a,size);
+    //   print(a, size);
 
     }
-    if (algorithm == "insert")
+    else if (algorithm == "insert")
     {
-      sort.primer_insertion(a, size);
-      print(a, size);
+        sort.primer_insertion(a, size);
+        // print(a, size);
     }
-    if (algorithm == "quick")
+    else if (algorithm == "quick")
     {
       //print(a,size);
       //cout<<endl;
       sort.quickSort(a,0,size-1);
-      print(a,size);
+    //   print(a,size);
 
     }
-    if (algorithm == "merge")
+    else if (algorithm == "merge")
     {
         sort.mergeSort(a, size);
-        print(a, size);
+        // print(a, size);
     }
-    if (algorithm == "heap")
+    else if (algorithm == "heap")
     {
       //print(a,size);
       sort.heapSort(a,size);
-      print(a,size);
+    //   print(a,size);
     }
+    else
+    {
+        cout << "Error: Please type valid algorithm" << endl;
+        return -1;
+    }
+    fstream output(outfile, fstream::out);
+    print(a, size, output);
+    output.close();
 
     return 0;
 }
