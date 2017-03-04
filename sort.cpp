@@ -19,7 +19,6 @@ struct Node
     Node* prev = 0;
     Node* next = 0;
 };
-
 class DoubleLinkedList
 {
 public:
@@ -27,6 +26,7 @@ public:
     // Destructor
     ~DoubleLinkedList()
     {
+        //cout << "DLL ~" << endl;
         clear();
     }
 
@@ -43,16 +43,14 @@ public:
     // Copy constructor
     DoubleLinkedList(DoubleLinkedList const & list)
     {
-        // cout << "copy" << endl;
+        //cout << "DLL copy" << endl;
     }
-    // Build a Double Linked List
-    DoubleLinkedList(const std::string& num, int digitsPerNode);
 
     DoubleLinkedList & operator=(DoubleLinkedList const & other)
     {
+        //cout << "DLL =" << endl;
         clear();
 
-        // cout << "equal" << endl;
         Node* temp = other.head;
         while (temp != nullptr)
         {
@@ -100,7 +98,7 @@ public:
         }
     }
 
-    void print(fstream & out) const
+    void print(ostream & out) const
     {
         Node* temp = head;
         while (temp != nullptr)
@@ -145,14 +143,18 @@ private:
     Node* head = 0;
     Node* tail = 0;
 };
-
 class BigNumber
 {
 public:
     BigNumber() {}
+    ~BigNumber()
+    {
+        //cout << "BN ~" << endl;
+    }
+
     BigNumber(string num, int digitsPerNode)
     {
-        // cout << num << endl;
+        //cout << num << endl;
         if (num[0] == '-')
         {
             isNegative = true;
@@ -171,11 +173,13 @@ public:
     }
     BigNumber(BigNumber const & other)
     {
-        // cout << "big copy" << endl;
+        //cout << "BN copy" << endl;
+        isNegative = other.isNegative;
+        data = other.data;
     }
     BigNumber & operator= (BigNumber const & other)
     {
-        // cout << "operator=" << endl;
+        //cout << "BN =" << endl;
         isNegative = other.isNegative;
         data = other.data;
         return *this;
@@ -238,7 +242,7 @@ public:
         return result;
     }
 
-    void print(fstream & out) const
+    void print(ostream & out) const
     {
         if (isNegative)
         {
@@ -262,105 +266,171 @@ private:
     DoubleLinkedList data;
 };
 
-
-    void print(BigNumber *a, int size, fstream & out)
+void print(BigNumber *a, int size, ostream & out)
+{
+    a[0].print(out);
+    for (int i = 1; i < size; i++)
     {
-        a[0].print(out);
-        for (int i = 1; i < size; i++)
-        {
-            out << endl;
-            a[i].print(out);
-        }
+        out << endl;
+        a[i].print(out);
     }
-
+}
 
 class Sort
 {
 public:
-    Sort(){}
-    ~Sort(){}
-    void selectionSort(BigNumber *a,int size)
+    Sort() {}
+    ~Sort() {}
+    void selectionSort(BigNumber *a, int size)
     {
-      //cout << "Entering Selection Sort" << endl;
-      int comparisons = 0;
-      int countSwap = 0;
-      int iSmallest;
-      for (int  i = 0; i < size-1; i++)
-      {
-          iSmallest = i;
-          for (int j = i + 1; j < size; j++)
-          {
-              if (a[j] < a[iSmallest])
-              {
-                  iSmallest = j;
-              }
-
-          }
-          if (iSmallest!=i) {
-            countSwap++;
-            a[iSmallest].swap(a[i]);
-          }
-          comparisons++;
-      }
-      countSwap=countSwap-1;
-
-      //print(a, size);
-      bigO<< "select" <<"         "<< size<< "             "<<comparisons<<"            "<< countSwap<<endl;
-    }
-    void quickSort(BigNumber *a,int left, int right)
-    {
-        //cout<<"In quickSort"<<endl;
-        int i = left;
-        int j = right;
-        int g=right-1;
-        int countSwap=0;
-        int pivot =(right+g) / 2; //pivot is in the middle
-        /* partition */
-        while(left<j || i<right)
+        //cout << "Entering Selection Sort" << endl;
+        int comparisons = 0;
+        int countSwap = 0;
+        int iSmallest;
+        for (int i = 0; i < size - 1; i++)
         {
-            while(a[i]<a[pivot])
-                i++;
-            while(a[pivot]<a[j])
-                j--;
-            if(i<= j)
+            iSmallest = i;
+            for (int j = i + 1; j < size; j++)
             {
-                a[j].swap(a[i]);
+                if (a[j] < a[iSmallest])
+                {
+                    iSmallest = j;
+                }
+
+            }
+            if (iSmallest != i)
+            {
                 countSwap++;
-                i++;
-                j--;
+                a[iSmallest].swap(a[i]);
+            }
+            comparisons++;
+        }
+        countSwap = countSwap - 1;
+
+        //print(a, size);
+        bigO << "select" << "         " << size << "             " << comparisons << "            " << countSwap << endl;
+    }
+    //void quickSort(BigNumber *a, int left, int right)
+    //{
+    //    //cout<<"In quickSort"<<endl;
+    //    int i = left;
+    //    int j = right;
+    //    int g = right - 1;
+    //    int countSwap = 0;
+    //    int pivot = (right + g) / 2; //pivot is in the middle
+    //    /* partition */
+    //    while (left < j || i < right)
+    //    {
+    //        while (a[i] < a[pivot])
+    //            i++;
+    //        while (a[pivot] < a[j])
+    //            j--;
+    //        if (i <= j)
+    //        {
+    //            a[j].swap(a[i]);
+    //            countSwap++;
+    //            i++;
+    //            j--;
+    //        }
+    //        else
+    //        {
+    //            if (left < j)
+    //                quickSort(a, left, j);
+    //            if (i < right)
+    //                quickSort(a, i, right);
+    //            return;
+    //        }
+    //    }
+    //}
+    void quickSort(BigNumber *a, int size)
+    {
+        int counter = 0;
+        if (size > 1)
+        {
+            quickSort(a, size, counter);
+        }
+    }
+    BigNumber * quickSort(BigNumber *a, int size, int counter)
+    {
+        // base case
+        if (size < 2)
+        {
+            return a;
+        }
+
+        // partition (divide)
+        BigNumber *L = new BigNumber[size]; // this wastes space, but it's easier
+        BigNumber *R = new BigNumber[size];
+
+        int l = 0;
+        int r = 0;
+        // choose 0 as the pivot, separate the rest into L and R
+        BigNumber pivot = a[0];
+        for (int i = 1; i < size; i++)
+        {
+            if (a[i] < pivot)
+            {
+                L[l] = a[i];
+                l++;
             }
             else
             {
-                if(left<j)
-                    quickSort(a, left, j);
-                if(i<right)
-                    quickSort(a,i,right);
-                return;
+                R[r] = a[i];
+                r++;
             }
         }
+
+        // recursion
+        L = quickSort(L, l, counter);
+        R = quickSort(R, r, counter);
+
+        // conquer
+        // copy L into a
+        int k = 0;
+        for (int i = 0; i < l; i++)
+        {
+            a[k] = L[i];
+            k++;
+        }
+        // copy pivot into a
+        a[k] = pivot;
+        k++;
+        // copy R into a
+        for (int i = 0; i < r; i++)
+        {
+            a[k] = R[i];
+            k++;
+        }
+
+        delete[] L;
+        delete[] R;
+        return a;
     }
-    
     void heapify(BigNumber *a, int size, int i, int comparisons, int countSwap)
     {
         int largest = i;  // Initialize largest as root
-        int left = 2*i + 1;  // left = 2*i + 1
-        int right = 2*i + 2;  // right = 2*i + 2
+        int left = 2 * i + 1;  // left = 2*i + 1
+        int right = 2 * i + 2;  // right = 2*i + 2
 
         // If left child is larger than root
-        if (size > left) {
-            if(a[largest] < a[left]) {
-              largest = left;
-              comparisons++;
+        if (size > left)
+        {
+            if (a[largest] < a[left])
+            {
+                largest = left;
+                comparisons++;
             }
-          }
+        }
 
         // If right child is larger than largest so far
-        if (size > right) {
-            if(a[largest] < a[right]) {
-              largest = right;
-              comparisons++;
+        if (size > right)
+        {
+            if (a[largest] < a[right])
+            {
+                largest = right;
+                comparisons++;
             }
-          }
+        }
         // If largest is not root
         if (largest != i)
         {
@@ -370,17 +440,17 @@ public:
             heapify(a, size, largest, comparisons, countSwap);
         }
     }
-
     void heapSort(BigNumber *a, int size)
     {
-      int countSwap = 0;
-      int comparisons = 0;
+        int countSwap = 0;
+        int comparisons = 0;
         // Build heap (rearrange array)
-        for (int i = size / 2 - 1; i >= 0; i--) {
+        for (int i = size / 2 - 1; i >= 0; i--)
+        {
             heapify(a, size, i, comparisons, countSwap);
-    }
+        }
         // One by one extract an element from heap
-        for (int i=size-1; i>=0; i--)
+        for (int i = size - 1; i >= 0; i--)
         {
             // Move current root to end
             a[0].swap(a[i]);
@@ -389,21 +459,19 @@ public:
             heapify(a, i, 0, comparisons, countSwap);
             countSwap++;
         }
-        bigO<<"heap" <<"        "<< size-1 <<"                 "<< comparisons-1<< "            "<< countSwap-2 <<endl;
+        bigO << "heap" << "        " << size - 1 << "                 " << comparisons - 1 << "            " << countSwap - 2 << endl;
     }
-
     void primer_insertion(BigNumber *a, int size)
-        {
-            int i = 0;
-            int j = 0;
-            int countSize = 0; //Number of integers sorted
-            int countComparisons = 0; //Number of comparisons to complete the sort
-            int countSwaps = 0; //Number of swaps to complete the sort
-            int bigOComparisons = 0; //Number of comparisons needed in the worst case
-            int bigOSwaps = 0; //Number of swaps needed in the worst case
-            insertion_sort(a, size, i, j, countSize, countComparisons, countSwaps, bigOComparisons, bigOSwaps);
-        }
-
+    {
+        int i = 0;
+        int j = 0;
+        int countSize = 0;          //Number of integers sorted
+        int countComparisons = 0;   //Number of comparisons to complete the sort
+        int countSwaps = 0;         //Number of swaps to complete the sort
+        int bigOComparisons = 0;    //Number of comparisons needed in the worst case
+        int bigOSwaps = 0;          //Number of swaps needed in the worst case
+        insertion_sort(a, size, i, j, countSize, countComparisons, countSwaps, bigOComparisons, bigOSwaps);
+    }
     void insertion_sort(BigNumber *a, int size, int i, int j, int countSize, int countComparisons, int countSwaps, int bigOComparisons, int bigOSwaps)
     {
         for (int i = 0; i < size - 1; i++)
@@ -418,111 +486,105 @@ public:
                 }
             }
         }
-      bigO<< "insert" <<"        "<< size-1 <<"               "<< countComparisons<< "            "<< countSwaps <<endl;
+        bigO << "insert" << "        " << size - 1 << "               " << countComparisons << "            " << countSwaps << endl;
     }
-
-    
-BigNumber* merge(BigNumber *a, int size, int counter)
-{
-    //Base case
-    if (size == 1) 
+    void mergeSort(BigNumber *a, int size)
     {
-        return a;
+        int counter = 0;
+        if (size > 1)
+        {
+            merge(a, size, counter);
+        }
     }
-
-    //Divide
-    int i, j, k;
-    int n1 = floor(size / 2);
-    int n2 = ceil(size / 2) + size % 2;
-    //Create temp arrays
-    BigNumber *L = new BigNumber[n1];
-    BigNumber *R = new BigNumber[n2];
-    //Copy data to temp arrays L[] and R[]
-    for (i = 0; i < n1; i++)
+    BigNumber* merge(BigNumber *a, int size, int counter)
     {
-        L[i] = a[i];
-    }
-    for (j = 0; j < n2; j++)
-    {
-        R[j] = a[j + n1];
-    }
+        //Base case
+        if (size == 1)
+        {
+            return a;
+        }
 
-    //Recursion
-    L = merge(L, n1, counter); //Putting in an unsorted L[] and returning a sorted L[]
-    R = merge(R, n2, counter); //Putting in an unsorted R[] and returning a sorted R[]
+        //Divide
+        int n1 = floor(size / 2);
+        int n2 = ceil(size / 2) + size % 2;
+        //Create temp arrays
+        BigNumber *L = new BigNumber[n1];
+        BigNumber *R = new BigNumber[n2];
+        //Copy data to temp arrays L[] and R[]
+        for (int i = 0; i < n1; i++)
+        {
+            L[i] = a[i];
+        }
+        for (int i = 0; i < n2; i++)
+        {
+            R[i] = a[i + n1];
+        }
 
-    //Conquer
-    //Merge the temp arrays back into arr[l...r]
-    i = 0; //Initial index of first subarray
-    j = 0; //Initial index of second subarray
-    k = 0; //Initial index of merged subarray
+        //Recursion
+        L = merge(L, n1, counter); //Putting in an unsorted L[] and returning a sorted L[]
+        R = merge(R, n2, counter); //Putting in an unsorted R[] and returning a sorted R[]
 
-    while (i < n1 && j < n2)
-    {
-        if (L[i] < R[j])
+        //Conquer
+        //Merge the temp arrays back into arr[l...r]
+        int i = 0; //Initial index of first subarray
+        int j = 0; //Initial index of second subarray
+        int k = 0; //Initial index of merged subarray
+
+        while (i < n1 && j < n2)
+        {
+            if (L[i] < R[j])
+            {
+                a[k] = L[i];
+                i++;
+            }
+            else
+            {
+                a[k] = R[j];
+                j++;
+            }
+            k++;
+        }
+        //Copy the remaining elements of L[], if there are any
+        while (i < n1)
         {
             a[k] = L[i];
-            i++;       
+            i++;
+            k++;
         }
-        else
+        //Copy the remaining elents of R[], if there are any
+        while (j < n2)
         {
             a[k] = R[j];
             j++;
+            k++;
         }
-        k++;
-    }
-    //Copy the remaining elements of L[], if there are any
-    while (i < n1)
-    {
-        a[k] = L[i];
-        i++;
-        k++;
-    }
-    //Copy the remaining elents of R[], if there are any
-    while (j < n2)
-    {
-        a[k] = R[j];
-        j++;
-        k++;
-    }
 
-    //Merge L[] and R[]
-    delete[] L; //Always delete a dynamically allocated array
-    delete[] R;
-    return a;
-}
-
-//l is for left index and r is right index of the sub-array of arr to be sorted
-void mergeSort(BigNumber *a, int size)
-{
-    if (size > 1)
-    {
-        int counter = 0;
-        merge(a, size, counter);
+        //Merge L[] and R[]
+        delete[] L; //Always delete a dynamically allocated array
+        delete[] R;
+        return a;
     }
-}
-
-
 
     bool open_the_bigO()
-      {
+    {
 
-          fstream testbigo("bigO.txt");
-          if(!testbigo) {
+        fstream testbigo("bigO.txt");
+        if (!testbigo)
+        {
 
-            bigO.open("bigO.txt",ios::app);
-            bigO << "algorithm   #numbers(n)  #Comparisons   #Swaps"<<endl;
+            bigO.open("bigO.txt", ios::app);
+            bigO << "algorithm   #numbers(n)  #Comparisons   #Swaps" << endl;
 
-          }
-          else {
+        }
+        else
+        {
             testbigo.close();
-            bigO.open("bigO.txt",ios::app);
-          }
+            bigO.open("bigO.txt", ios::app);
+        }
 
-          return true;
+        return true;
 
-      }
-
+    }
     void close_the_file()
     {
         // bigO.close;
@@ -543,45 +605,45 @@ void mergeSort(BigNumber *a, int size)
     //     return *this;
     // }
 
-  private:
-      fstream bigO;
-      BigNumber *a;
+private:
+    fstream bigO;
+    BigNumber *a;
 
-  };
+};
 
-      int count_lines(string & filename, int digitsPerNode)
-      {
-          std::ifstream ifs(filename.c_str());
+int count_lines(string & filename, int digitsPerNode)
+{
+    std::ifstream ifs(filename.c_str());
 
-          int counter = 0;
-          while (!ifs.eof())
-          {
-              string line;
-              ifs >> line;
-              counter++;
-          }
+    int counter = 0;
+    while (!ifs.eof())
+    {
+        string line;
+        ifs >> line;
+        counter++;
+    }
 
-          return counter;
-      }
-      void input(BigNumber *a, string & filename, int digitsPerNode)
-      {
-          std::ifstream ifs(filename.c_str());
+    return counter;
+}
+void input(BigNumber *a, string & filename, int digitsPerNode)
+{
+    std::ifstream ifs(filename.c_str());
 
-          int counter = 0;
-          while (!ifs.eof())
-          {
-              string line;
-              ifs >> line;
-              if(line.size()!=0){
-              a[counter] = BigNumber(line, digitsPerNode);
-              counter++;
-          }
+    int counter = 0;
+    while (!ifs.eof())
+    {
+        string line;
+        ifs >> line;
+        if (line.size() != 0)
+        {
+            a[counter] = BigNumber(line, digitsPerNode);
+            counter++;
         }
-      }
+    }
+}
 
 int main(int argc, char* argv[])
 {
-
     if (argc < 2)
     {
         //std::cerr("Usage: infinitearithmetic \"input=xyz.txt;digitsPerNode=<number>\"\n");
@@ -594,6 +656,11 @@ int main(int argc, char* argv[])
     std::string outfile = am.get("output");
     cout << outfile << endl;
 
+    //string filename = "1.txt";
+    //int digitsPerNode = 8;
+    //string algorithm = "quick";
+    //string outfile = "out.txt";
+
     int size = count_lines(filename, digitsPerNode);
     BigNumber *a = new BigNumber[size];
     input(a, filename, digitsPerNode);
@@ -601,11 +668,10 @@ int main(int argc, char* argv[])
     Sort sort;
     sort.open_the_bigO();
 
-
     if (algorithm == "select")
     {
-        sort.selectionSort(a,size);
-    //   print(a, size);
+        sort.selectionSort(a, size);
+        //   print(a, size);
 
     }
     else if (algorithm == "insert")
@@ -615,10 +681,10 @@ int main(int argc, char* argv[])
     }
     else if (algorithm == "quick")
     {
-      //print(a,size);
-      //cout<<endl;
-      sort.quickSort(a,0,size-1);
-    //   print(a,size);
+        //print(a,size);
+        //cout<<endl;
+        sort.quickSort(a, size);
+        //   print(a,size);
 
     }
     else if (algorithm == "merge")
@@ -628,15 +694,16 @@ int main(int argc, char* argv[])
     }
     else if (algorithm == "heap")
     {
-      //print(a,size);
-      sort.heapSort(a,size);
-    //   print(a,size);
+        //print(a,size);
+        sort.heapSort(a, size);
+        //   print(a,size);
     }
     else
     {
         cout << "Error: Please type valid algorithm" << endl;
         return -1;
     }
+
     fstream output(outfile, fstream::out);
     print(a, size, output);
     output.close();
