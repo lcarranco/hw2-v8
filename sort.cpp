@@ -310,38 +310,7 @@ public:
         //print(a, size);
         bigO << "select" << "         " << size << "             " << comparisons << "            " << countSwap << endl;
     }
-    //void quickSort(BigNumber *a, int left, int right)
-    //{
-    //    //cout<<"In quickSort"<<endl;
-    //    int i = left;
-    //    int j = right;
-    //    int g = right - 1;
-    //    int countSwap = 0;
-    //    int pivot = (right + g) / 2; //pivot is in the middle
-    //    /* partition */
-    //    while (left < j || i < right)
-    //    {
-    //        while (a[i] < a[pivot])
-    //            i++;
-    //        while (a[pivot] < a[j])
-    //            j--;
-    //        if (i <= j)
-    //        {
-    //            a[j].swap(a[i]);
-    //            countSwap++;
-    //            i++;
-    //            j--;
-    //        }
-    //        else
-    //        {
-    //            if (left < j)
-    //                quickSort(a, left, j);
-    //            if (i < right)
-    //                quickSort(a, i, right);
-    //            return;
-    //        }
-    //    }
-    //}
+
     void quickSort(BigNumber *a, int size)
     {
         int counter = 0;
@@ -350,6 +319,7 @@ public:
             quickSort(a, size, counter);
         }
     }
+
     BigNumber * quickSort(BigNumber *a, int size, int counter)
     {
         // base case
@@ -406,6 +376,7 @@ public:
         delete[] R;
         return a;
     }
+
     void heapify(BigNumber *a, int size, int i, int comparisons, int countSwap)
     {
         int largest = i;  // Initialize largest as root
@@ -440,6 +411,7 @@ public:
             heapify(a, size, largest, comparisons, countSwap);
         }
     }
+
     void heapSort(BigNumber *a, int size)
     {
         int countSwap = 0;
@@ -461,6 +433,7 @@ public:
         }
         bigO << "heap" << "        " << size - 1 << "                 " << comparisons - 1 << "            " << countSwap - 2 << endl;
     }
+    
     void primer_insertion(BigNumber *a, int size)
     {
         int i = 0;
@@ -472,6 +445,7 @@ public:
         int bigOSwaps = 0;          //Number of swaps needed in the worst case
         insertion_sort(a, size, i, j, countSize, countComparisons, countSwaps, bigOComparisons, bigOSwaps);
     }
+
     void insertion_sort(BigNumber *a, int size, int i, int j, int countSize, int countComparisons, int countSwaps, int bigOComparisons, int bigOSwaps)
     {
         for (int i = 0; i < size - 1; i++)
@@ -488,6 +462,7 @@ public:
         }
         bigO << "insert" << "        " << size - 1 << "               " << countComparisons << "            " << countSwaps << endl;
     }
+    
     void mergeSort(BigNumber *a, int size)
     {
         int counter = 0;
@@ -496,6 +471,7 @@ public:
             merge(a, size, counter);
         }
     }
+
     BigNumber* merge(BigNumber *a, int size, int counter)
     {
         //Base case
@@ -585,25 +561,6 @@ public:
         return true;
 
     }
-    void close_the_file()
-    {
-        // bigO.close;
-    }
-    // void primer_selection()
-    // {
-    //     int i - 0;
-    //     int iSmallest = 0;
-    //     j = 0;
-    //     selectionSort(i, iSmallest, j);
-    // }
-
-    // Sort & operator= (Sort & other)
-    // {
-    //     // cout << "operator=" << endl;
-    //     a = other.a;
-    //     //data = other.data;
-    //     return *this;
-    // }
 
 private:
     fstream bigO;
@@ -625,6 +582,7 @@ int count_lines(string & filename, int digitsPerNode)
 
     return counter;
 }
+
 void input(BigNumber *a, string & filename, int digitsPerNode)
 {
     std::ifstream ifs(filename.c_str());
@@ -656,6 +614,7 @@ int main(int argc, char* argv[])
     std::string outfile = am.get("output");
     cout << outfile << endl;
 
+    //Used for testing on Visual Studio
     //string filename = "1.txt";
     //int digitsPerNode = 8;
     //string algorithm = "quick";
@@ -672,7 +631,6 @@ int main(int argc, char* argv[])
     {
         sort.selectionSort(a, size);
         //   print(a, size);
-
     }
     else if (algorithm == "insert")
     {
@@ -685,7 +643,6 @@ int main(int argc, char* argv[])
         //cout<<endl;
         sort.quickSort(a, size);
         //   print(a,size);
-
     }
     else if (algorithm == "merge")
     {
